@@ -1,0 +1,9 @@
+{
+  "name": "autoventas-e2e",
+  "private": true,
+  "type": "module",
+  "description": "Prueba E2E de la interfaz con Playwright (se ejecuta en Docker)",
+  "dependencies": {
+    "playwright": "1.65.1"
+  }
+}

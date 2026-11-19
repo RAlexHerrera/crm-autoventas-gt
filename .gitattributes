@@ -1,0 +1,6 @@
+# Finales de línea LF en todo el repositorio (scripts y archivos usados dentro de Docker).
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.png binary
+*.pdf binary
+*.docx binary

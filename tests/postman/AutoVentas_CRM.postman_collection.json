@@ -1,0 +1,3260 @@
+{
+  "info": {
+    "name": "CRM AutoVentas GT — API",
+    "description": "Todos los endpoints de la API con casos exitosos y de error. Ejecute las carpetas en orden (la carpeta 01 obtiene los tokens). baseUrl por defecto: http://localhost:3000",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "tokenAdmin",
+      "value": ""
+    },
+    {
+      "key": "tokenGerente",
+      "value": ""
+    },
+    {
+      "key": "tokenVendedor",
+      "value": ""
+    },
+    {
+      "key": "sufijo",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Autenticación (HU-01)",
+      "item": [
+        {
+          "name": "Login administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.collectionVariables.set('tokenAdmin', r.token);",
+                  "pm.test('Rol ADMIN', () => pm.expect(r.usuario.rol).to.eql('ADMIN'));",
+                  "pm.test('No expone contraseñas', () => pm.expect(pm.response.text()).to.not.match(/password|hash/i));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@autoventas.gt\",\n  \"password\": \"Admin123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login gerente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.collectionVariables.set('tokenGerente', r.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"gerente@autoventas.gt\",\n  \"password\": \"Gerente123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login vendedor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.collectionVariables.set('tokenVendedor', r.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"vendedor@autoventas.gt\",\n  \"password\": \"Vendedor123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: contraseña incorrecta → 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 401', () => pm.response.to.have.status(401));",
+                  "const r = pm.response.json();",
+                  "pm.test('Mensaje genérico', () => pm.expect(r.mensaje).to.eql('Correo o contraseña incorrectos.'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@autoventas.gt\",\n  \"password\": \"incorrecta1\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: datos inválidos → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', () => pm.response.to.have.status(400));",
+                  "const r = pm.response.json();",
+                  "pm.test('Errores por campo', () => pm.expect(r.errores.length).to.be.above(0));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"no-es-correo\",\n  \"password\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Perfil de la sesión",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test('Es vendedor', () => pm.expect(r.rol).to.eql('VENDEDOR'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/perfil",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "perfil"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: sin token → 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: token inválido → 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer token.invalido.x"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: cambiar contraseña con actual incorrecta → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actual\": \"NoEsLaClave1\",\n  \"nueva\": \"NuevaClave123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/cambiar-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "cambiar-password"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Usuarios y roles (HU-01)",
+      "item": [
+        {
+          "name": "Listar usuarios (admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test('No expone contraseñas', () => pm.expect(pm.response.text()).to.not.match(/password|hash/i));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios?pagina=1&tamano=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "1"
+                },
+                {
+                  "key": "tamano",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: vendedor lista usuarios → 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: gerente lista usuarios → 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Vendedores activos (todos los roles)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios/vendedores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "vendedores"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear usuario vendedor",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('sufijo', Date.now().toString().slice(-7));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 201', () => pm.response.to.have.status(201));",
+                  "const r = pm.response.json();",
+                  "pm.collectionVariables.set('usuarioNuevoId', r.id);",
+                  "pm.test('No expone contraseñas', () => pm.expect(pm.response.text()).to.not.match(/password|hash/i));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Vendedor Postman\",\n  \"email\": \"postman{{sufijo}}@autoventas.gt\",\n  \"password\": \"Postman123\",\n  \"rolId\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: contraseña débil → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Débil\",\n  \"email\": \"debil{{sufijo}}@autoventas.gt\",\n  \"password\": \"123\",\n  \"rolId\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: correo duplicado → 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Duplicado\",\n  \"email\": \"gerente@autoventas.gt\",\n  \"password\": \"Postman123\",\n  \"rolId\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Desactivar usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios/{{usuarioNuevoId}}/activo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "{{usuarioNuevoId}}",
+                "activo"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: admin se desactiva a sí mismo → 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/usuarios/1/activo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "usuarios",
+                "1",
+                "activo"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar roles",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test('3 roles', () => pm.expect(r.length).to.eql(3));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/roles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "roles"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Vehículos (HU-07, HU-08)",
+      "item": [
+        {
+          "name": "Catálogo con filtros",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test('Solo disponibles Toyota', () => r.datos.forEach((v) => { pm.expect(v.estado).to.eql('Disponible'); pm.expect(v.marca).to.eql('Toyota'); }));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehiculos?estado=Disponible&marca=Toyota&orden=precio_asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehiculos"
+              ],
+              "query": [
+                {
+                  "key": "estado",
+                  "value": "Disponible"
+                },
+                {
+                  "key": "marca",
+                  "value": "Toyota"
+                },
+                {
+                  "key": "orden",
+                  "value": "precio_asc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Catálogos para filtros",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehiculos/catalogos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehiculos",
+                "catalogos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Resumen de inventario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehiculos/inventario",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehiculos",
+                "inventario"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar vehículo (gerente)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const c = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789';",
+                  "let vin = ''; for (let i = 0; i < 17; i++) vin += c[Math.floor(Math.random() * c.length)];",
+                  "pm.collectionVariables.set('vin', vin);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 201', () => pm.response.to.have.status(201));",
+                  "const r = pm.response.json();",
+                  "pm.collectionVariables.set('vehiculoId', r.id);",
+                  "pm.test('Disponible', () => pm.expect(r.estado).to.eql('Disponible'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vin\": \"{{vin}}\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Yaris\",\n  \"anio\": 2026,\n  \"version\": \"XLS\",\n  \"tipo\": \"Sedán\",\n  \"condicion\": \"Nuevo\",\n  \"color\": \"Blanco\",\n  \"transmision\": \"Automática\",\n  \"combustible\": \"Gasolina\",\n  \"motor\": \"1.5 L\",\n  \"kilometraje\": 0,\n  \"precio\": 165000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehiculos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehiculos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: VIN duplicado → 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vin\": \"{{vin}}\",\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Yaris\",\n  \"anio\": 2026,\n  \"tipo\": \"Sedán\",\n  \"condicion\": \"Nuevo\",\n  \"color\": \"Rojo\",\n  \"transmision\": \"Manual\",\n  \"combustible\": \"Gasolina\",\n  \"precio\": 160000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehiculos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehiculos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: VIN inválido (con O) → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vin\": \"1HGCM82633AO04352\",\n  \"marca\": \"Honda\",\n  \"modelo\": \"Fit\",\n  \"anio\": 2024,\n  \"tipo\": \"Hatchback\",\n  \"condicion\": \"Usado\",\n  \"color\": \"Azul\",\n  \"transmision\": \"Manual\",\n  \"combustible\": \"Gasolina\",\n  \"kilometraje\": 1000,\n  \"precio\": 90000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehiculos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehiculos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: vendedor registra vehículo → 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehiculos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehiculos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ficha técnica",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehiculos/{{vehiculoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehiculos",
+                "{{vehiculoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: marcar Vendido manualmente → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"Vendido\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehiculos/{{vehiculoId}}/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehiculos",
+                "{{vehiculoId}}",
+                "estado"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: vehículo inexistente → 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehiculos/999999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehiculos",
+                "999999"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Clientes e interacciones (HU-02, HU-03)",
+      "item": [
+        {
+          "name": "Listar mis clientes (vendedor)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test('Solo los propios', () => r.datos.forEach((c) => pm.expect(c.vendedorId).to.eql(3)));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes?q=&pagina=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": ""
+                },
+                {
+                  "key": "pagina",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 201', () => pm.response.to.have.status(201));",
+                  "const r = pm.response.json();",
+                  "pm.collectionVariables.set('clienteId', r.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Cliente\",\n  \"apellidos\": \"Postman {{sufijo}}\",\n  \"telefono\": \"55{{sufijo}}\",\n  \"nit\": \"CF\",\n  \"email\": \"cliente{{sufijo}}@correo.gt\",\n  \"clasificacion\": \"Nuevo\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: DPI inválido → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Mal\",\n  \"apellidos\": \"DPI\",\n  \"telefono\": \"55001122\",\n  \"dpi\": \"123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: cliente de otro vendedor → 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "2"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar interacción",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": \"{{clienteId}}\",\n  \"tipo\": \"Llamada\",\n  \"descripcion\": \"Llamada de seguimiento desde Postman\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/interacciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "interacciones"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Historial del cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test('Tiene historial', () => pm.expect(r.length).to.be.above(0));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/interacciones?clienteId={{clienteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "interacciones"
+              ],
+              "query": [
+                {
+                  "key": "clienteId",
+                  "value": "{{clienteId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: tipo «Sistema» manual → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": \"{{clienteId}}\",\n  \"tipo\": \"Sistema\",\n  \"descripcion\": \"No permitido\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/interacciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "interacciones"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Prospectos y oportunidades (HU-04, HU-05, HU-06)",
+      "item": [
+        {
+          "name": "Registrar prospecto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 201', () => pm.response.to.have.status(201));",
+                  "const r = pm.response.json();",
+                  "pm.collectionVariables.set('prospectoId', r.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Prospecto\",\n  \"apellidos\": \"Postman {{sufijo}}\",\n  \"telefono\": \"44{{sufijo}}\",\n  \"email\": \"prospecto{{sufijo}}@correo.gt\",\n  \"fuente\": \"Sitio web\",\n  \"interes\": \"Sedán\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/prospectos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "prospectos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: prospecto duplicado → 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 409', () => pm.response.to.have.status(409));",
+                  "const r = pm.response.json();",
+                  "pm.test('Devuelve coincidencias', () => pm.expect(r.duplicados.length).to.be.above(0));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombres\": \"Otro\",\n  \"apellidos\": \"Duplicado\",\n  \"telefono\": \"44{{sufijo}}\",\n  \"fuente\": \"Llamada\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/prospectos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "prospectos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verificar duplicados",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/prospectos/verificar-duplicados?telefono=5501-1001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "prospectos",
+                "verificar-duplicados"
+              ],
+              "query": [
+                {
+                  "key": "telefono",
+                  "value": "5501-1001"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: vendedor asigna prospecto → 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vendedorId\": 4\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/prospectos/{{prospectoId}}/asignar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "prospectos",
+                "{{prospectoId}}",
+                "asignar"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Asignar vendedor (gerente)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vendedorId\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/prospectos/{{prospectoId}}/asignar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "prospectos",
+                "{{prospectoId}}",
+                "asignar"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear oportunidad",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 201', () => pm.response.to.have.status(201));",
+                  "const r = pm.response.json();",
+                  "pm.collectionVariables.set('oportunidadId', r.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Yaris para prospecto Postman\",\n  \"prospectoId\": \"{{prospectoId}}\",\n  \"vehiculoInteresId\": \"{{vehiculoId}}\",\n  \"montoEstimado\": 165000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/oportunidades",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "oportunidades"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Avanzar etapa a Contacto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test('Etapa Contacto', () => pm.expect(r.etapa).to.eql('Contacto'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"etapa\": \"Contacto\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/oportunidades/{{oportunidadId}}/etapa",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "oportunidades",
+                "{{oportunidadId}}",
+                "etapa"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: marcar Ganado manualmente → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"etapa\": \"Ganado\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/oportunidades/{{oportunidadId}}/etapa",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "oportunidades",
+                "{{oportunidadId}}",
+                "etapa"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: Perdido sin motivo → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"etapa\": \"Perdido\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/oportunidades/{{oportunidadId}}/etapa",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "oportunidades",
+                "{{oportunidadId}}",
+                "etapa"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Resumen por etapas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/oportunidades/resumen-etapas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "oportunidades",
+                "resumen-etapas"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Cotizaciones (HU-09, HU-14)",
+      "item": [
+        {
+          "name": "ERROR: cotizar vehículo vendido → 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oportunidadId\": \"{{oportunidadId}}\",\n  \"lineas\": [\n    {\n      \"vehiculoId\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cotizaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cotizaciones"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: descuento mayor al precio → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oportunidadId\": \"{{oportunidadId}}\",\n  \"lineas\": [\n    {\n      \"vehiculoId\": \"{{vehiculoId}}\",\n      \"descuento\": 999999\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cotizaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cotizaciones"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear cotización (IVA 12 %)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 201', () => pm.response.to.have.status(201));",
+                  "const r = pm.response.json();",
+                  "pm.collectionVariables.set('cotizacionId', r.id);",
+                  "pm.test('Correlativo COT-AAAA-NNNNNN', () => pm.expect(r.correlativo).to.match(/^COT-\\d{4}-\\d{6}$/));",
+                  "pm.test('Base = 165000 - 5000', () => pm.expect(r.baseImponible).to.eql(160000));",
+                  "pm.test('IVA 12 %', () => pm.expect(r.iva).to.eql(19200));",
+                  "pm.test('Total', () => pm.expect(r.total).to.eql(179200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oportunidadId\": \"{{oportunidadId}}\",\n  \"observaciones\": \"Incluye polarizado\",\n  \"lineas\": [\n    {\n      \"vehiculoId\": \"{{vehiculoId}}\",\n      \"descuento\": 5000\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cotizaciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cotizaciones"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle de cotización",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cotizaciones/{{cotizacionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cotizaciones",
+                "{{cotizacionId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: Borrador → Aceptada → 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"Aceptada\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cotizaciones/{{cotizacionId}}/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cotizaciones",
+                "{{cotizacionId}}",
+                "estado"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Marcar como Enviada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"Enviada\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cotizaciones/{{cotizacionId}}/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cotizaciones",
+                "{{cotizacionId}}",
+                "estado"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Marcar como Aceptada (reserva vehículo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test('Vehículo reservado', () => pm.expect(r.lineas[0].vehiculoEstado).to.eql('Reservado'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"Aceptada\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cotizaciones/{{cotizacionId}}/estado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cotizaciones",
+                "{{cotizacionId}}",
+                "estado"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Descargar PDF",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Es PDF', () => pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/pdf'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cotizaciones/{{cotizacionId}}/pdf",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cotizaciones",
+                "{{cotizacionId}}",
+                "pdf"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar cotizaciones por estado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cotizaciones?estado=Aceptada",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cotizaciones"
+              ],
+              "query": [
+                {
+                  "key": "estado",
+                  "value": "Aceptada"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Ventas (HU-10)",
+      "item": [
+        {
+          "name": "Registrar venta (transacción)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 201', () => pm.response.to.have.status(201));",
+                  "const r = pm.response.json();",
+                  "pm.collectionVariables.set('ventaId', r.id);",
+                  "pm.test('Correlativo VTA', () => pm.expect(r.correlativo).to.match(/^VTA-/));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cotizacionId\": \"{{cotizacionId}}\",\n  \"metodoPago\": \"Contado\",\n  \"cliente\": {\n    \"nit\": \"CF\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Vehículo quedó Vendido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test('Vendido', () => pm.expect(r.estado).to.eql('Vendido'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehiculos/{{vehiculoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehiculos",
+                "{{vehiculoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Oportunidad quedó Ganado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test('Ganado', () => pm.expect(r.etapa).to.eql('Ganado'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/oportunidades/{{oportunidadId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "oportunidades",
+                "{{oportunidadId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Prospecto convertido en cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test('Convertido', () => pm.expect(r.estado).to.eql('Convertido'));",
+                  "pm.test('Vinculado a cliente', () => pm.expect(r.clienteId).to.be.a('number'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/prospectos/{{prospectoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "prospectos",
+                "{{prospectoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: venta duplicada → 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cotizacionId\": \"{{cotizacionId}}\",\n  \"metodoPago\": \"Contado\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: cotización no aceptada → 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cotizacionId\": 9,\n  \"metodoPago\": \"Contado\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: método de pago inválido → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cotizacionId\": \"{{cotizacionId}}\",\n  \"metodoPago\": \"Trueque\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar ventas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas?pagina=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle de venta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas/{{ventaId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ventas",
+                "{{ventaId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Reportes y dashboard (HU-11, 12, 13, 15)",
+      "item": [
+        {
+          "name": "Dashboard gerente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test('Tiene KPI', () => pm.expect(r.kpis.ventasCantidad).to.be.above(0));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "dashboard"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: vendedor abre dashboard → 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "dashboard"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Panel personal del vendedor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/mi-panel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "mi-panel"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ventas por período (mensual)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/ventas-periodo?agrupacion=mes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "ventas-periodo"
+              ],
+              "query": [
+                {
+                  "key": "agrupacion",
+                  "value": "mes"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Rendimiento por vendedor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/rendimiento-vendedores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "rendimiento-vendedores"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Conversión de prospectos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/conversion-prospectos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "conversion-prospectos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Vehículos más vendidos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/vehiculos-mas-vendidos?limite=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "vehiculos-mas-vendidos"
+              ],
+              "query": [
+                {
+                  "key": "limite",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Funnel de ventas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/funnel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "funnel"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Clasificación de clientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/clasificacion-clientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "clasificacion-clientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: rango de fechas invertido → 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenGerente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reportes/funnel?desde=2026-12-31&hasta=2026-01-01",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "reportes",
+                "funnel"
+              ],
+              "query": [
+                {
+                  "key": "desde",
+                  "value": "2026-12-31"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-01-01"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 Sistema",
+      "item": [
+        {
+          "name": "Salud del servicio",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/salud",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "salud"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Especificación OpenAPI",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/openapi.json",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "openapi.json"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ERROR: ruta inexistente → 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código HTTP 404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenVendedor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/no-existe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "no-existe"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

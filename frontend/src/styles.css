@@ -1,0 +1,624 @@
+/* =====================================================================
+   CRM AutoVentas GT — estilos globales (sin frameworks externos)
+   ===================================================================== */
+:root {
+  --c-primario: #1d4ed8;
+  --c-primario-osc: #1e3a8a;
+  --c-primario-claro: #dbeafe;
+  --c-fondo: #f3f5f9;
+  --c-superficie: #ffffff;
+  --c-borde: #dfe3ea;
+  --c-texto: #1f2937;
+  --c-texto-suave: #5b6474;
+  --c-exito: #15803d;
+  --c-exito-claro: #dcfce7;
+  --c-alerta: #b45309;
+  --c-alerta-claro: #fef3c7;
+  --c-peligro: #b91c1c;
+  --c-peligro-claro: #fee2e2;
+  --c-info-claro: #e0f2fe;
+  --c-gris-claro: #eef0f4;
+  --radio: 10px;
+  --sombra: 0 1px 2px rgb(16 24 40 / 6%), 0 1px 3px rgb(16 24 40 / 10%);
+  --fuente: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+body {
+  font-family: var(--fuente);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--c-texto);
+  background: var(--c-fondo);
+}
+a {
+  color: var(--c-primario);
+}
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+  margin: 0 0 0.5rem;
+}
+h1 {
+  font-size: 1.5rem;
+}
+h2 {
+  font-size: 1.2rem;
+}
+h3 {
+  font-size: 1.05rem;
+}
+.texto-suave {
+  color: var(--c-texto-suave);
+}
+.texto-pequeno {
+  font-size: 0.85rem;
+}
+.numero {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.02em;
+}
+.oculto-movil {
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Encabezado de página ---------- */
+.pagina-encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.pagina-encabezado p {
+  margin: 0.15rem 0 0;
+  color: var(--c-texto-suave);
+}
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+.migas {
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+.migas a {
+  text-decoration: none;
+}
+
+/* ---------- Tarjetas ---------- */
+.tarjeta {
+  background: var(--c-superficie);
+  border: 1px solid var(--c-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+.tarjeta > h2:first-child,
+.tarjeta > h3:first-child {
+  margin-top: 0;
+}
+.rejilla {
+  display: grid;
+  gap: 1rem;
+}
+.rejilla-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.rejilla-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.rejilla-kpi {
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+}
+.kpi {
+  background: var(--c-superficie);
+  border: 1px solid var(--c-borde);
+  border-radius: var(--radio);
+  padding: 0.9rem 1rem;
+  box-shadow: var(--sombra);
+}
+.kpi .etiqueta {
+  font-size: 0.8rem;
+  color: var(--c-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.kpi .valor {
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin-top: 0.2rem;
+  font-variant-numeric: tabular-nums;
+}
+.kpi .detalle {
+  font-size: 0.8rem;
+  color: var(--c-texto-suave);
+}
+
+.datos-lista {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0;
+}
+.datos-lista dt {
+  color: var(--c-texto-suave);
+  font-size: 0.9rem;
+}
+.datos-lista dd {
+  margin: 0;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1px solid var(--c-borde);
+  background: var(--c-superficie);
+  color: var(--c-texto);
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  min-height: 38px;
+  white-space: nowrap;
+}
+.btn:hover {
+  background: var(--c-gris-claro);
+}
+.btn:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 1px;
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.btn-primario {
+  background: var(--c-primario);
+  border-color: var(--c-primario);
+  color: #fff;
+}
+.btn-primario:hover {
+  background: var(--c-primario-osc);
+}
+.btn-exito {
+  background: var(--c-exito);
+  border-color: var(--c-exito);
+  color: #fff;
+}
+.btn-exito:hover {
+  background: #166534;
+}
+.btn-peligro {
+  background: var(--c-superficie);
+  border-color: #fca5a5;
+  color: var(--c-peligro);
+}
+.btn-peligro:hover {
+  background: var(--c-peligro-claro);
+}
+.btn-peligro-solido {
+  background: var(--c-peligro);
+  border-color: var(--c-peligro);
+  color: #fff;
+}
+.btn-peligro-solido:hover {
+  background: #991b1b;
+}
+.btn-chico {
+  padding: 0.25rem 0.6rem;
+  min-height: 30px;
+  font-size: 0.85rem;
+}
+.btn-enlace {
+  border: none;
+  background: none;
+  color: var(--c-primario);
+  padding: 0;
+  min-height: 0;
+  text-decoration: underline;
+}
+.btn-enlace:hover {
+  background: none;
+}
+
+/* ---------- Formularios ---------- */
+.formulario {
+  display: grid;
+  gap: 0.9rem 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.formulario .ancho-completo {
+  grid-column: 1 / -1;
+}
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.campo label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.campo .requerido {
+  color: var(--c-peligro);
+}
+.campo .ayuda {
+  font-size: 0.8rem;
+  color: var(--c-texto-suave);
+}
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  border: 1px solid #c9ced8;
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+  background: #fff;
+  min-height: 38px;
+  width: 100%;
+}
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border-color: var(--c-peligro);
+  background: #fffafa;
+}
+.error-campo {
+  color: var(--c-peligro);
+  font-size: 0.82rem;
+}
+.formulario-acciones {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+}
+
+/* ---------- Filtros y búsqueda ---------- */
+.barra-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: flex-end;
+  margin-bottom: 0.9rem;
+}
+.barra-filtros .campo {
+  min-width: 150px;
+  flex: 1 1 150px;
+}
+.barra-filtros .campo.busqueda {
+  flex: 2 1 240px;
+}
+
+/* ---------- Tablas ---------- */
+.tabla-contenedor {
+  overflow-x: auto;
+  border: 1px solid var(--c-borde);
+  border-radius: var(--radio);
+  background: var(--c-superficie);
+}
+table.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.tabla th,
+.tabla td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--c-borde);
+  text-align: left;
+  vertical-align: middle;
+}
+.tabla th {
+  background: #f8fafc;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--c-texto-suave);
+  white-space: nowrap;
+}
+.tabla tbody tr:hover {
+  background: #f9fbff;
+}
+.tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+.tabla .clic {
+  cursor: pointer;
+}
+.tabla tfoot td {
+  font-weight: 700;
+  background: #f8fafc;
+}
+
+/* ---------- Insignias de estado ---------- */
+.insignia {
+  display: inline-block;
+  padding: 0.12rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--c-gris-claro);
+  color: var(--c-texto);
+  white-space: nowrap;
+}
+.insignia.verde {
+  background: var(--c-exito-claro);
+  color: #166534;
+}
+.insignia.amarilla {
+  background: var(--c-alerta-claro);
+  color: #92400e;
+}
+.insignia.roja {
+  background: var(--c-peligro-claro);
+  color: #991b1b;
+}
+.insignia.azul {
+  background: var(--c-primario-claro);
+  color: #1e40af;
+}
+.insignia.celeste {
+  background: var(--c-info-claro);
+  color: #075985;
+}
+.insignia.morada {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+/* ---------- Avisos ---------- */
+.aviso {
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  margin-bottom: 1rem;
+  border: 1px solid;
+}
+.aviso.error {
+  background: var(--c-peligro-claro);
+  border-color: #fca5a5;
+  color: #7f1d1d;
+}
+.aviso.alerta {
+  background: var(--c-alerta-claro);
+  border-color: #fcd34d;
+  color: #78350f;
+}
+.aviso.info {
+  background: var(--c-info-claro);
+  border-color: #7dd3fc;
+  color: #0c4a6e;
+}
+.aviso.exito {
+  background: var(--c-exito-claro);
+  border-color: #86efac;
+  color: #14532d;
+}
+.aviso ul {
+  margin: 0.3rem 0 0;
+  padding-left: 1.2rem;
+}
+
+/* ---------- Pestañas ---------- */
+.pestanas {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--c-borde);
+  margin-bottom: 1rem;
+  overflow-x: auto;
+}
+.pestanas button {
+  border: none;
+  background: none;
+  padding: 0.6rem 0.9rem;
+  font: inherit;
+  cursor: pointer;
+  color: var(--c-texto-suave);
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+}
+.pestanas button.activa {
+  color: var(--c-primario);
+  border-bottom-color: var(--c-primario);
+  font-weight: 600;
+}
+
+/* ---------- Diálogos ---------- */
+.dialogo-fondo {
+  position: fixed;
+  inset: 0;
+  background: rgb(15 23 42 / 45%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+.dialogo {
+  background: #fff;
+  border-radius: 12px;
+  max-width: 520px;
+  width: 100%;
+  padding: 1.25rem 1.4rem;
+  box-shadow: 0 20px 50px rgb(0 0 0 / 25%);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.dialogo h2 {
+  margin-top: 0;
+}
+.dialogo .formulario-acciones {
+  margin-top: 1rem;
+}
+
+/* ---------- Spinner ---------- */
+.cargando {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--c-texto-suave);
+  padding: 1rem 0;
+}
+.cargando::before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid var(--c-primario-claro);
+  border-top-color: var(--c-primario);
+  animation: girar 0.8s linear infinite;
+}
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Kanban de oportunidades ---------- */
+.kanban {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(210px, 1fr));
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+.kanban-columna {
+  background: #eaeef5;
+  border-radius: var(--radio);
+  padding: 0.6rem;
+  min-height: 120px;
+}
+.kanban-columna h3 {
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--c-texto-suave);
+}
+.kanban-tarjeta {
+  display: block;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.6rem 0.7rem;
+  margin-bottom: 0.5rem;
+  box-shadow: var(--sombra);
+  text-decoration: none;
+  color: inherit;
+  border-left: 4px solid var(--c-primario);
+}
+.kanban-tarjeta:hover {
+  background: #f9fbff;
+}
+.kanban-tarjeta strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+/* ---------- Línea de tiempo (historial) ---------- */
+.linea-tiempo {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.linea-tiempo li {
+  position: relative;
+  padding: 0 0 0.9rem 1.4rem;
+  border-left: 2px solid var(--c-borde);
+  margin-left: 0.4rem;
+}
+.linea-tiempo li::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 0.3rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--c-primario);
+  border: 2px solid #fff;
+}
+.linea-tiempo li.sistema::before {
+  background: #94a3b8;
+}
+.linea-tiempo .meta {
+  font-size: 0.8rem;
+  color: var(--c-texto-suave);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .rejilla-2,
+  .rejilla-3 {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px) {
+  body {
+    font-size: 14px;
+  }
+  .formulario {
+    grid-template-columns: 1fr;
+  }
+  .oculto-movil {
+    display: none;
+  }
+  .tarjeta {
+    padding: 0.85rem;
+  }
+  .pagina-encabezado .acciones {
+    width: 100%;
+  }
+  .pagina-encabezado .acciones .btn {
+    flex: 1;
+  }
+  .datos-lista {
+    grid-template-columns: 1fr;
+    gap: 0.1rem;
+  }
+  .datos-lista dd {
+    margin-bottom: 0.4rem;
+  }
+}

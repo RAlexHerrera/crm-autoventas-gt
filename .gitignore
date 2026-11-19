@@ -1,0 +1,27 @@
+# Dependencias y compilados
+node_modules/
+dist/
+.angular/
+coverage/
+out-tsc/
+
+# Variables de entorno reales (.env.example sí se versiona)
+# Nota: .env contiene solo claves de DESARROLLO; en producción no lo versione.
+.env.production
+.env.local
+
+# Pruebas E2E
+tests/e2e/capturas/
+tests/e2e/node_modules/
+tests/e2e/package-lock.json
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+.scannerwork/
+
+# Documentos originales del curso (contienen datos personales del equipo): no se publican
+docs/fuentes/
