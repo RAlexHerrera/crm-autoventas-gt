@@ -1,3 +1,4 @@
+// Configuración global: detección de cambios sin zone.js, rutas, HTTP con interceptor de sesión y formato de Guatemala.
 import {
   ApplicationConfig,
   LOCALE_ID,

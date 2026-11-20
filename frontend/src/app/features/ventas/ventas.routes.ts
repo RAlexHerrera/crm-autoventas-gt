@@ -1,3 +1,4 @@
+// Listado y detalle de ventas. Las ventas se registran desde una cotización aceptada.
 import { Component, OnInit, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, Routes } from '@angular/router';

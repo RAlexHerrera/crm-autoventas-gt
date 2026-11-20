@@ -68,7 +68,8 @@ try {
   paso('Vendedor inició sesión');
 
   // El vendedor no ve el menú de reportes ni usuarios
-  if (await page.getByRole('link', { name: /Reportes/ }).count()) throw new Error('El vendedor no debería ver Reportes');
+  if (await page.getByRole('link', { name: /Reportes/ }).count())
+    throw new Error('El vendedor no debería ver Reportes');
   await page.goto(`${BASE}/reportes`);
   await page.waitForURL(/\/inicio/);
   paso('Vendedor redirigido al intentar abrir /reportes (guard)');
@@ -117,7 +118,8 @@ try {
   // Total esperado = (precio − Q4,000) × 1.12, calculado aquí de forma independiente.
   const esperado = Math.round((precio - 4000) * 1.12 * 100) / 100;
   const textoEsperado = `Q${esperado.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-  if (!totalTexto.includes(textoEsperado)) throw new Error(`Total inesperado: ${totalTexto} (esperado ${textoEsperado})`);
+  if (!totalTexto.includes(textoEsperado))
+    throw new Error(`Total inesperado: ${totalTexto} (esperado ${textoEsperado})`);
   paso(`Cotización creada con total ${totalTexto}`);
 
   // 5. Enviada → Aceptada → Venta
@@ -146,7 +148,8 @@ try {
   await confirmar(page);
   await login(page, 'gerente@autoventas.gt', 'Gerente123!');
   const ventasDespues = await totalVentasDashboard(page);
-  if (ventasDespues !== ventasAntes + 1) throw new Error(`El dashboard no se actualizó: ${ventasAntes} → ${ventasDespues}`);
+  if (ventasDespues !== ventasAntes + 1)
+    throw new Error(`El dashboard no se actualizó: ${ventasAntes} → ${ventasDespues}`);
   await page.waitForTimeout(800); // animación de gráficas
   await page.screenshot({ path: `${SALIDA}/06-dashboard-gerente.png`, fullPage: true });
   paso(`Dashboard del gerente actualizado: ${ventasAntes} → ${ventasDespues} ventas`);

@@ -314,6 +314,7 @@ export class CotizacionDetalleComponent implements OnInit {
     this.mostrarVenta.set(true);
   }
 
+  /** Envía la venta. El servidor actualiza vehículo, oportunidad y cliente en una sola transacción. */
   registrarVenta(): void {
     this.procesando.set(true);
     this.errorVenta.set(null);

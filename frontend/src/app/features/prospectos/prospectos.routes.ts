@@ -1,3 +1,4 @@
+// Rutas de prospectos. Cada pantalla se carga solo cuando se visita (carga diferida).
 import { Routes } from '@angular/router';
 
 export const PROSPECTOS_RUTAS: Routes = [

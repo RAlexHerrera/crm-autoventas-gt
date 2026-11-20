@@ -1,3 +1,4 @@
+// Rutas de oportunidades. Cada pantalla se carga solo cuando se visita (carga diferida).
 import { Routes } from '@angular/router';
 
 export const OPORTUNIDADES_RUTAS: Routes = [

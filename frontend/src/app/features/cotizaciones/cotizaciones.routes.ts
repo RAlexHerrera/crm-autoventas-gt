@@ -1,3 +1,4 @@
+// Rutas de cotizaciones. Cada pantalla se carga solo cuando se visita (carga diferida).
 import { Routes } from '@angular/router';
 
 export const COTIZACIONES_RUTAS: Routes = [

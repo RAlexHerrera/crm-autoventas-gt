@@ -1,3 +1,4 @@
+// Rutas de vehículos. Registrar y editar solo para gerente y administrador (el backend también lo valida).
 import { Routes } from '@angular/router';
 import { rolGuard } from '../../core/guards';
 

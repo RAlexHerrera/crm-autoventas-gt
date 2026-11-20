@@ -13,6 +13,7 @@ interface EnlaceMenu {
   roles?: Rol[];
 }
 
+// Menú lateral. Las opciones con `roles` solo se muestran a esos roles.
 const MENU: EnlaceMenu[] = [
   { ruta: '/inicio', texto: 'Inicio', icono: '🏠' },
   { ruta: '/prospectos', texto: 'Prospectos', icono: '🎯' },
